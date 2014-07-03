@@ -192,7 +192,7 @@ class Livefyre_Sync_Impl implements Livefyre_Sync {
 
     function post_param( $name, $plain_to_html = false, $default = null ) {
 
-        $in = ( isset( $_POST[$name] ) ) ? trim( $_POST[$name] ) : $default;
+        $in = ( isset( $_POST[$name] ) ) ? trim( sanitize_text_field($_POST[$name]) ) : $default;
         if ( $plain_to_html ) {
             $out = str_replace( "&", "&amp;", $in );
             $out = str_replace( "<", "&lt;", $out );

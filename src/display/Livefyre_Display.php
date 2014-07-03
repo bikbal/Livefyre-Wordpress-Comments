@@ -73,11 +73,13 @@ class Livefyre_Display {
         We do this in the footer because the wp_footer() should be the last thing called on the page.
         We don't do it earlier, because it might interfere with what the theme code is trying to accomplish.  */
         wp_reset_query();
+        
+        $network = get_option( 'livefyre_domain_name', 'livefyre.com' );
+        $network = ( $network == '' ? 'livefyre.com' : $network );
 
         global $post, $current_user, $wp_query;
         if ( comments_open() && $this->livefyre_show_comments() ) {   // is this a post page?
-            $network = get_option( 'livefyre_domain_name', 'livefyre.com' );
-            $network = ( $network == '' ? 'livefyre.com' : $network );
+            
             $siteId = get_option( 'livefyre_site_id' );
             $siteKey = get_option( 'livefyre_site_key' );
             $environment = "livefyre.com";
@@ -117,6 +119,7 @@ class Livefyre_Display {
             if ( $network != 'livefyre.com' ) {
                 $networkConfig['network'] = $network;
             }
+            $networkConfigString = '';
             #for each in $networkConfig, build the string
             foreach ( $networkConfig as $key => $value ) {
                 $networkConfigString = "\"$key\": \"$value\",\n";

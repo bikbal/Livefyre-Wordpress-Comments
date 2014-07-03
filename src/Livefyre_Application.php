@@ -113,7 +113,6 @@ class Livefyre_Application {
      *
      */
     function setup_activation( $Obj ) {
-
         register_activation_hook( __FILE__, array( &$Obj, 'activate' ) );
         register_deactivation_hook( __FILE__, array( &$Obj, 'deactivate' ) );
 

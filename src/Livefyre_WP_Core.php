@@ -10,6 +10,9 @@ Author URI: http://livefyre.com/
 */
 
 define( 'LF_PLUGIN_VERSION', '4.2.0' );
+define( 'LF_DEFAULT_PROFILE_DOMAIN', 'livefyre.com' );
+define( 'LF_DEFAULT_TLD', 'livefyre.com' );
+define( 'LF_PLUGIN_PATH', WP_PLUGIN_DIR . '/livefyre-comments/');
 
 class Livefyre_WP_Core {
 
@@ -52,6 +55,13 @@ class Livefyre_WP_Core {
         if ( $uses_default_tld ) {
             $bootstrap_domain = 'data.bootstrap.fyre.co';
             $environment = '';
+        }
+        
+        $existing_blogname = $this->ext->get_option( 'livefyre_blogname', false );
+        if ( $existing_blogname ) {
+            $site_id = $existing_blogname;
+        } else {
+            $site_id = $this->ext->get_option( 'livefyre_site_id', false );
         }
 
         $this->bootstrap_url_v3 = "http://$bootstrap_domain/$environment$profile_domain/$site_id";
