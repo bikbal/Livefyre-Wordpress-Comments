@@ -251,11 +251,11 @@ $upgrade_status = get_option( 'livefyre_backend_upgrade', false );
                         <div id="import_information">
                             <?php echo "<p>Message: " .esc_html(get_option( 'livefyre_import_message', '' )). "</p>"?>
                             <p>Aw, man. It looks like your comment data gave our importer a hiccup and the import process was derailed. But have no fear, the Livefyre support team is here to help. 
-                                If you wouldn’t mind following the instructions below, our support team would be more than happy to work with you to get this problem squared away before you know it!
+                                If you wouldn't mind following the instructions below, our support team would be more than happy to work with you to get this problem squared away before you know it!
                                 E-mail Livefyre at <a href="mailto:support@livefyre.com">support@livefyre.com</a> with the following:</p>
-                            <p>1. In your WP-Admin panel, click “Tools”<br />
-                            2. Click “Export”<br />
-                            3. Be sure that “All Content” is selected, and then click “Download Export File”<br />
+                            <p>1. In your WP-Admin panel, click 'Tools'<br />
+                            2. Click 'Export'<br />
+                            3. Be sure that 'All Content' is selected, and then click 'Download Export File'<br />
                             4. Attach and e-mail the .XML file that WordPress created to support@livefyre.com along with the URL of your blog.<br /><br />
                             <strong>Note:</strong> If you have multiple sites on your WordPress that you would like to import comments for, please make note of that
                             in the email.</p>
@@ -275,10 +275,10 @@ $upgrade_status = get_option( 'livefyre_backend_upgrade', false );
                         else {
                         ?>
                             <h1>Livefyre Import Status: <span>Uninitialized</span></h1>
-                            <p>You’ve got some comment data that hasn’t been imported into Livefyre yet, please click the 'Import Comments' button below.
+                            <p>You've got some comment data that hasn't been imported into Livefyre yet, please click the 'Import Comments' button below.
                             As your comments are being imported the status will be displayed here.
                             If Livefyre is unable to import your data, you can still use the plugin, but your existing comments will not be displayed in the Livefyre comment widget. 
-                            Please e-mail <a href="mailto:support@livefyre.com">support@livefyre.com</a> with any issues as we’d be more than happy to help you resolve them.</p>
+                            Please e-mail <a href="mailto:support@livefyre.com">support@livefyre.com</a> with any issues as we'd be more than happy to help you resolve them.</p>
                             <span><a href="?page=livefyre&livefyre_import_begin=1" class="fyrebutton">Import Comments</a></span>
                         <?php
                         }
@@ -316,6 +316,7 @@ $upgrade_status = get_option( 'livefyre_backend_upgrade', false );
                             commenting widget to load on the page a few seconds slower than if caching was enabled.</p>
                         <?php
                         if( isset( $_GET['lf_caching']) ) {
+                            check_admin_referer( 'lf_caching_save');
                             update_option( 'livefyre_caching', sanitize_text_field( $_GET['lf_caching'] ) );
                         }
                         ?>
@@ -325,6 +326,7 @@ $upgrade_status = get_option( 'livefyre_backend_upgrade', false );
                                 <option value="on" <?php echo esc_html($livefyre_settings->checkSelected('livefyre_caching', 'on')); ?> >On</option>
                                 <option value="off" <?php echo esc_html($livefyre_settings->checkSelected('livefyre_caching', 'off')); ?> >Off</option>
                             </select><br />
+                            <?php wp_nonce_field( 'lf_caching_save'); ?>
                             <input type="submit" class="fyrebutton" value="Submit" />
                         </form>
                     </div>
@@ -346,7 +348,7 @@ $upgrade_status = get_option( 'livefyre_backend_upgrade', false );
                     <?php echo '<h1>Conflicting Plugins (' .esc_html($plugins_count). ')</h1>';
                     if ( $plugins_count ) {
                     ?>
-                    <p>We found that the following plugins are active on your site, and unfortunately they will conflict with Livefyre Comments 3 and break our widget’s functionality. 
+                    <p>We found that the following plugins are active on your site, and unfortunately they will conflict with Livefyre Comments 3 and break our widget's functionality. 
                         To be sure that Comments 3 is running without a hitch, it will be necessary to deactivate the following plugins:</p>
                     <ul>
                     <?php
@@ -369,9 +371,9 @@ $upgrade_status = get_option( 'livefyre_backend_upgrade', false );
                     if ( $disabled_posts_count || $disabled_pages_count) {
                         ?>
                         <p>We've automagically found that you do not have the "Allow Comments" box in WordPress checked on the posts and pages listed below, which means that the Livefyre widget will not be present on them. 
-                            To be sure that the Livefyre Comments 3 widget is visible on these posts or pages, simply click on the “enable” button next to each.</p>
-                        <p>If you’d like to simply close commenting on any post or page with the Livefyre widget still present, you can do so from your Livefyre admin panel by clicking the "Livefyre Admin" link to the right, 
-                            clicking “Conversations", and then clicking "Stream Settings."</p>
+                            To be sure that the Livefyre Comments 3 widget is visible on these posts or pages, simply click on the "enable" button next to each.</p>
+                        <p>If you'd like to simply close commenting on any post or page with the Livefyre widget still present, you can do so from your Livefyre admin panel by clicking the "Livefyre Admin" link to the right, 
+                            clicking "Conversations", and then clicking "Stream Settings."</p>
                         <?php
                         if ( $disabled_posts_count ) {
                             $livefyre_settings->display_no_allows( 'post', $comments_disabled_posts);
@@ -408,6 +410,7 @@ $upgrade_status = get_option( 'livefyre_backend_upgrade', false );
                     $post_types = get_post_types( $args = $excludes );
 
                     if( isset( $_GET['save_display_settings']) ) {
+                        check_admin_referer( 'save_display_settings');
                         if ( isset( $_GET['display_posts'] ) ) {
                             update_option( 'livefyre_display_posts', sanitize_text_field( $_GET['display_posts'] ) );
                         }
@@ -448,6 +451,7 @@ $upgrade_status = get_option( 'livefyre_backend_upgrade', false );
                         <?php 
                         foreach ($post_types as $post_type ) {
                             $post_type_name = 'livefyre_display_' .$post_type;
+                            $post_type_checkbox = '';
                             if ( get_option($post_type_name, 'true') == 'true' ) {
                                 $post_type_checkbox = 'checked="yes"';
                             }
@@ -455,6 +459,7 @@ $upgrade_status = get_option( 'livefyre_backend_upgrade', false );
                             <input type="checkbox" class="checkbox" name=<?php echo '"' .$post_type. '"';?> value="true" <?php echo $post_type_checkbox;?> /><?php echo $post_type; ?><br />
                             <?php
                         }
+                        wp_nonce_field( 'save_display_settings');
                         ?>
                         <input type="submit" class="fyrebutton" name="save_display_settings" value="Submit" />
                     </form>
@@ -462,6 +467,7 @@ $upgrade_status = get_option( 'livefyre_backend_upgrade', false );
                 <div id="fyrelanguages">
                     <?php
                     if( isset( $_GET['lf_language']) ) {
+                        check_admin_referer( 'save_languages');
                         update_option( 'livefyre_language', sanitize_text_field( $_GET['lf_language'] ) );
                     }
                     ?>
@@ -475,6 +481,7 @@ $upgrade_status = get_option( 'livefyre_backend_upgrade', false );
                             <option value="French" <?php echo $livefyre_settings->checkSelected('livefyre_language', 'French'); ?> >French</option>
                             <option value="Portuguese" <?php echo $livefyre_settings->checkSelected('livefyre_language', 'Portuguese'); ?> >Portuguese</option>
                         </select><br />
+                        <?php wp_nonce_field( 'save_languages'); ?>
                         <input type="submit" class="fyrebutton" name="save_languages" value="Submit" />
                     </form>
                 </div>
@@ -483,7 +490,7 @@ $upgrade_status = get_option( 'livefyre_backend_upgrade', false );
                 ?>
                     <div id="fyreimportsuccess">
                         <h1>Import Success</h1>
-                        <p class="lf_text">We’re all finished, your comment data is now fully imported. You are good to go!</p>
+                        <p class="lf_text">We're all finished, your comment data is now fully imported. You are good to go!</p>
                     </div>
                 <?php
                 }
@@ -491,8 +498,8 @@ $upgrade_status = get_option( 'livefyre_backend_upgrade', false );
                 ?>
                     <div id="fyredeactivation">
                         <h1>Deactivation</h1>
-                        <p class="lf_text">Welcome back! It looks like you’ve reactivated the Livefyre plugin recently. If you’ve had comments left on your site since deactivating Livefyre, 
-                            please shoot a quick e-mail to <a href="mailto:support@livefyre.com">support@livefyre.com</a> and we’d be happy to help you get all of your comment data properly re-imported.
+                        <p class="lf_text">Welcome back! It looks like you've reactivated the Livefyre plugin recently. If you've had comments left on your site since deactivating Livefyre, 
+                            please shoot a quick e-mail to <a href="mailto:support@livefyre.com">support@livefyre.com</a> and we'd be happy to help you get all of your comment data properly re-imported.
                     </div>
                 <?php
                 }

@@ -145,7 +145,7 @@ settings_toggle_more = function() {
                     if ( $disabled_posts_count || $disabled_pages_count) {
                         ?>
                         <p>We've automagically found that you do not have the "Allow Comments" box in WordPress checked on the posts and pages listed below, which means that the Livefyre widget will not be present on them. 
-                            To be sure that the Livefyre Comments 3 widget is visible on these posts or pages, simply click on the “enable” button next to each.</p>
+                            To be sure that the Livefyre Comments 3 widget is visible on these posts or pages, simply click on the “enable�? button next to each.</p>
                         <p>If you’d like to simply close commenting on any post or page with the Livefyre widget still present, you can do so from your Livefyre admin panel by clicking the "Livefyre Admin" link to the right, 
                             clicking “Conversations", and then clicking "Stream Settings."</p>
                         <?php
@@ -194,6 +194,7 @@ settings_toggle_more = function() {
                     $post_types = get_post_types( $args = $excludes );
 
                     if( isset( $_GET['save_display_settings']) ) {
+                        check_admin_referer( 'save_display_settings');
                         if ( isset( $_GET['display_posts'] ) ) {
                             update_option( 'livefyre_display_posts', sanitize_text_field( $_GET['display_posts'] ) );
                         }
@@ -242,6 +243,7 @@ settings_toggle_more = function() {
                             <input type="checkbox" class="checkbox" name=<?php echo '"' .esc_attr( $post_type ). '"';?> value="true" <?php echo esc_attr( $post_type_checkbox );?> /><?php echo esc_attr( $post_type ); ?><br />
                             <?php
                         }
+                        wp_nonce_field( 'save_display_settings');
                         ?>
                         <input type="submit" class="fyrebutton" name="save_display_settings" value="Submit" />
                     </form>
@@ -249,6 +251,7 @@ settings_toggle_more = function() {
                 <div id="fyrelanguages">
                     <?php
                     if( isset( $_GET['lf_language']) ) {
+                        check_admin_referer( 'save_languages');
                         update_option( 'livefyre_language', sanitize_text_field( $_GET['lf_language'] ) );
                     }
                     ?>
@@ -262,6 +265,7 @@ settings_toggle_more = function() {
                             <option value="French" <?php echo esc_attr( $livefyre_settings->checkSelected('livefyre_language', 'French') ); ?> >French</option>
                             <option value="Portuguese" <?php echo esc_attr( $livefyre_settings->checkSelected('livefyre_language', 'Portuguese') ); ?> >Portuguese</option>
                         </select><br />
+                        <?php wp_nonce_field( 'save_languages'); ?>
                         <input type="submit" class="fyrebutton" name="save_languages" value="Submit" />
                     </form><br>
                     <p class="lf_text">Note: If you are implementing your own custom strings, the selection in this section will be overwritten.</p>
